@@ -1,18 +1,13 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { Button, Input } from "../UI";
 
-interface LoginFormProps {
-  onSubmit: (email: string, password: string) => Promise<void>;
-  loading?: boolean;
-}
-
-export const LoginForm = ({ onSubmit, loading = false }: LoginFormProps) => {
+export const LoginForm = ({ onSubmit, loading = false }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await onSubmit(email, password);
   };

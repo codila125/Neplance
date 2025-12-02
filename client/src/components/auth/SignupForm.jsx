@@ -1,31 +1,16 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { Button, Input } from "../UI";
 
-type UserRole = "freelancer" | "client";
-
-interface SignupFormData {
-  name: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-  roles: UserRole[];
-}
-
-interface SignupFormProps {
-  onSubmit: (data: SignupFormData) => Promise<void>;
-  loading?: boolean;
-}
-
-export const SignupForm = ({ onSubmit, loading = false }: SignupFormProps) => {
+export const SignupForm = ({ onSubmit, loading = false }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [selectedRoles, setSelectedRoles] = useState<Set<UserRole>>(new Set());
+  const [selectedRoles, setSelectedRoles] = useState(new Set());
 
-  const toggleRole = (role: UserRole) => {
+  const toggleRole = (role) => {
     setSelectedRoles((prev) => {
       const newRoles = new Set(prev);
       if (newRoles.has(role)) {
@@ -37,7 +22,7 @@ export const SignupForm = ({ onSubmit, loading = false }: SignupFormProps) => {
     });
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     await onSubmit({
       name,

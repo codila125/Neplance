@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 /**
  * Middleware for authentication and protected routes
@@ -8,7 +7,7 @@ import type { NextRequest } from "next/server";
  * - Redirects unauthenticated users to login
  */
 
-export function proxy(request: NextRequest) {
+export function proxy(request) {
   const pathname = request.nextUrl.pathname;
 
   // Get auth token from cookies
@@ -17,7 +16,7 @@ export function proxy(request: NextRequest) {
   // Protected routes that require authentication
   const protectedRoutes = ["/dashboard", "/profile", "/settings"];
   const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   // Public auth routes (redirect to home if already logged in)

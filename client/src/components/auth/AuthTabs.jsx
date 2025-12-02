@@ -1,11 +1,6 @@
 "use client";
 
-interface AuthTabsProps {
-  activeTab: "login" | "signup";
-  onTabChange: (tab: "login" | "signup") => void;
-}
-
-export const AuthTabs = ({ activeTab, onTabChange }: AuthTabsProps) => {
+export const AuthTabs = ({ activeTab, onTabChange }) => {
   return (
     <div className="tab-nav">
       <button

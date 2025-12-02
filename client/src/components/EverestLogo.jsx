@@ -1,8 +1,4 @@
-export const EverestLogo = ({
-  className = "h-16 w-16",
-}: {
-  className?: string;
-}) => (
+export const EverestLogo = ({ className = "h-16 w-16" }) => (
   <svg
     viewBox="0 0 200 200"
     className={className}

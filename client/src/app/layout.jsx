@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Neplance",
   description: "Connect with world-class talent. Build remarkable projects.",
   icons: {
@@ -12,11 +11,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" className={geist.variable}>
       <body className={geist.className}>{children}</body>

@@ -7,37 +7,12 @@ import { AuthTabs } from "./AuthTabs";
 import { LoginForm } from "./LoginForm";
 import { SignupForm } from "./SignupForm";
 
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string[];
-}
-
-interface AuthResponse {
-  user?: User;
-  data?: User;
-  token: string;
-}
-
-interface AuthError {
-  message?: string;
-}
-
-interface AuthPanelProps {
-  initialTab?: "login" | "signup";
-  onAuthSuccess?: (user: User, token: string) => void;
-}
-
-export const AuthPanel = ({
-  initialTab = "login",
-  onAuthSuccess,
-}: AuthPanelProps) => {
-  const [activeTab, setActiveTab] = useState<"login" | "signup">(initialTab);
-  const [error, setError] = useState<string>("");
+export const AuthPanel = ({ initialTab = "login", onAuthSuccess }) => {
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLoginSubmit = async (email: string, password: string) => {
+  const handleLoginSubmit = async (email, password) => {
     setError("");
     setLoading(true);
 
@@ -51,7 +26,7 @@ export const AuthPanel = ({
         },
       );
 
-      const data: AuthResponse = await response.json();
+      const data = await response.json();
 
       if (response.ok) {
         const user = data.data || data.user;
@@ -61,8 +36,7 @@ export const AuthPanel = ({
           onAuthSuccess(user, data.token);
         }
       } else {
-        const errorData = data as AuthError;
-        setError(errorData.message || "Login failed. Please try again.");
+        setError(data.message || "Login failed. Please try again.");
       }
     } catch (_err) {
       setError("Network error. Please check your connection and try again.");
@@ -71,13 +45,7 @@ export const AuthPanel = ({
     }
   };
 
-  const handleSignupSubmit = async (formData: {
-    name: string;
-    email: string;
-    password: string;
-    passwordConfirm: string;
-    roles: string[];
-  }) => {
+  const handleSignupSubmit = async (formData) => {
     setError("");
     setLoading(true);
 
@@ -97,7 +65,7 @@ export const AuthPanel = ({
         },
       );
 
-      const data: AuthResponse = await response.json();
+      const data = await response.json();
 
       if (response.ok) {
         const user = data.data || data.user;
@@ -107,8 +75,7 @@ export const AuthPanel = ({
           onAuthSuccess(user, data.token);
         }
       } else {
-        const errorData = data as AuthError;
-        setError(errorData.message || "Registration failed. Please try again.");
+        setError(data.message || "Registration failed. Please try again.");
       }
     } catch (_err) {
       setError("Network error. Please check your connection and try again.");

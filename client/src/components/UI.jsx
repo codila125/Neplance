@@ -1,11 +1,6 @@
-import type { ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 import { useId } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-}
-
-export const Input = ({ label, className = "", ...props }: InputProps) => {
+export const Input = ({ label, className = "", ...props }) => {
   const id = useId();
   return (
     <div>
@@ -19,16 +14,12 @@ export const Input = ({ label, className = "", ...props }: InputProps) => {
   );
 };
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost";
-}
-
 export const Button = ({
   variant = "primary",
   className = "",
   children,
   ...props
-}: ButtonProps) => {
+}) => {
   const variantClass = {
     primary: "btn btn-primary",
     secondary: "btn btn-secondary",

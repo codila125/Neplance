@@ -1,19 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAuthToken, getAuthUser, clearAuthCookies, type User } from "@/lib/auth-cookies";
 import { AuthPanel, Dashboard, HeroSection } from "@/components";
+import {
+  clearAuthCookies,
+  getAuthToken,
+  getAuthUser,
+} from "@/lib/auth-cookies";
 
 export default function Home() {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Load session from cookies on mount
   useEffect(() => {
     const storedToken = getAuthToken();
     const storedUser = getAuthUser();
-    
+
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(storedUser);

@@ -1,14 +1,8 @@
 "use client";
 
-import type { User } from "./auth/AuthPanel";
 import { EverestLogo } from "./EverestLogo";
 
-interface DashboardProps {
-  user: User;
-  onLogout: () => void;
-}
-
-export const Dashboard = ({ user, onLogout }: DashboardProps) => {
+export const Dashboard = ({ user, onLogout }) => {
   return (
     <div className="container-page">
       {/* Header */}
