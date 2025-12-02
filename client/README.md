@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 Neplance Client
 
-## Getting Started
+Frontend application for Neplance - built with Next.js 16 and React 19.
 
-First, run the development server:
+---
+
+## 🚀 Setup & Run
+
+### Prerequisites
+- Node.js v18+
+- Running Neplance server (see [../server/README.md](../server/README.md))
+
+### Installation
 
 ```bash
+cd client
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env.local
+# Edit .env.local and set NEXT_PUBLIC_API_URL=http://localhost:3001
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Access**: http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Scripts
 
-## Learn More
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Build for production |
+| `npm start` | Start production server |
+| `npm run lint` | Check code quality |
+| `npm run format` | Format code |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔧 Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create `.env.local`:
 
-## Deploy on Vercel
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📁 Structure
+
+```
+client/
+├── src/
+│   ├── app/           # Next.js pages
+│   ├── components/    # React components
+│   ├── lib/          # Utilities
+│   └── styles/       # CSS files
+├── public/           # Static assets
+└── .env.local        # Your config (create this)
+```
+
+---
+
+## 🛠️ Tech Stack
+
+- Next.js 16 (App Router)
+- React 19
+- TailwindCSS 4
+- Biome (linting)
+- React Compiler
+
+---
+
+## 🐛 Troubleshooting
+
+**Port in use?**
+```bash
+lsof -ti:3000 | xargs kill -9
+```
+
+**API not connecting?**
+- Check backend is running on port 3001
+- Verify `NEXT_PUBLIC_API_URL` in `.env.local`
+
+**Build errors?**
+```bash
+rm -rf .next node_modules
+npm install
+```
+
+---
+
+Need help? Check the [main README](../README.md)
