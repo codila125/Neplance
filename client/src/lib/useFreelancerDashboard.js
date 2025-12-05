@@ -2,7 +2,7 @@
  * Custom hook for freelancer dashboard data fetching
  */
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiCall } from "./api";
 
 const EMPTY_STATES = {
@@ -26,6 +26,11 @@ export function useFreelancerDashboard(token) {
   const [ongoingJobs, setOngoingJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refetch = useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     if (!token) {
@@ -75,7 +80,7 @@ export function useFreelancerDashboard(token) {
     };
 
     fetchDashboardData();
-  }, [token]);
+  }, [token, refreshKey]);
 
   return {
     availableJobs,
@@ -84,5 +89,6 @@ export function useFreelancerDashboard(token) {
     loading,
     error,
     EMPTY_STATES,
+    refetch,
   };
 }

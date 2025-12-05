@@ -47,6 +47,11 @@ const getProposalForJob = catchAsync(async (req, res) => {
     );
 
   const data = await Proposal.find({ job: jobId }).populate("freelancer");
+
+  res.status(200).json({
+    status: "success",
+    data,
+  });
 });
 
 // PATCH /api/proposals/:id/accept

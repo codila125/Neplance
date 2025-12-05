@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { apiCall } from "../../../lib/api";
 import { getAuthToken } from "../../../lib/auth-cookies";
 import { useFreelancerDashboard } from "../../../lib/useFreelancerDashboard";
 import { EmptyState } from "../../dashboard/EmptyState";
 import { Header, MobileMenu } from "../../dashboard/Header";
 import { JobCard, ProposalCard } from "../../dashboard/JobCard";
+import { ProposalModal } from "../../dashboard/ProposalModal";
 import {
   AvailableIcon,
   OngoingIcon,
@@ -15,6 +17,8 @@ import {
 
 export const FreelancerDashboard = ({ user, onLogout }) => {
   const [activeTab, setActiveTab] = useState("available");
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const token = getAuthToken();
   const {
     availableJobs,
@@ -23,6 +27,7 @@ export const FreelancerDashboard = ({ user, onLogout }) => {
     loading,
     error,
     EMPTY_STATES,
+    refetch,
   } = useFreelancerDashboard(token);
 
   if (loading) {
@@ -47,9 +52,38 @@ export const FreelancerDashboard = ({ user, onLogout }) => {
     );
   }
 
+  const handleOpenProposalModal = (job) => {
+    setSelectedJob(job);
+  };
+
+  const handleCloseProposalModal = () => {
+    setSelectedJob(null);
+  };
+
+  const handleSubmitProposal = async (proposalData) => {
+    setSubmitting(true);
+    try {
+      await apiCall("/proposals", token, {
+        method: "POST",
+        body: JSON.stringify(proposalData),
+      });
+      setSelectedJob(null);
+      refetch?.();
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const renderJobCards = (jobs, variant = "find") =>
     jobs.length > 0 ? (
-      jobs.map((job) => <JobCard key={job._id} job={job} variant={variant} />)
+      jobs.map((job) => (
+        <JobCard
+          key={job._id}
+          job={job}
+          variant={variant}
+          onSubmitProposal={handleOpenProposalModal}
+        />
+      ))
     ) : (
       <EmptyState {...getEmptyState()} />
     );
@@ -141,6 +175,16 @@ export const FreelancerDashboard = ({ user, onLogout }) => {
         {activeTab === "proposed" && renderProposalCards(proposedJobs)}
         {activeTab === "ongoing" && renderJobCards(ongoingJobs, "current")}
       </div>
+
+      {/* Proposal Modal */}
+      {selectedJob && (
+        <ProposalModal
+          job={selectedJob}
+          onSubmit={handleSubmitProposal}
+          onClose={handleCloseProposalModal}
+          loading={submitting}
+        />
+      )}
     </div>
   );
 };

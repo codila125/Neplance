@@ -1,4 +1,4 @@
-export const JobCard = ({ job, variant = "default" }) => {
+export const JobCard = ({ job, variant = "default", onSubmitProposal }) => {
   const { title, description, budget, status, client } = job;
   const clientName = client?.name || "Unknown Client";
 
@@ -35,7 +35,11 @@ export const JobCard = ({ job, variant = "default" }) => {
           </span>
         </div>
         {variant === "find" && (
-          <button type="button" className="job-card-btn job-card-btn-primary">
+          <button
+            type="button"
+            className="job-card-btn job-card-btn-primary"
+            onClick={() => onSubmitProposal?.(job)}
+          >
             Submit Proposal
           </button>
         )}
