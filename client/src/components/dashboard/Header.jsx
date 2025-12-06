@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { setAuthCookies } from "../../lib/auth-cookies";
 import { EverestLogo } from "../EverestLogo";
 
@@ -23,8 +24,11 @@ export const Header = ({ user, onLogout, onRoleSwitch }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const router = useRouter();
+  const pathname = usePathname();
+
   const handleProfileClick = () => {
-    // TODO: Navigate to profile page
+    router.push("/profile");
     setShowDropdown(false);
   };
 
@@ -65,7 +69,10 @@ export const Header = ({ user, onLogout, onRoleSwitch }) => {
   return (
     <header className="header sticky top-0 z-10">
       <div className="header-content">
-        <div className="header-brand-group">
+        <div
+          className="header-brand-group cursor-pointer"
+          onClick={() => router.push("/dashboard")}
+        >
           <EverestLogo className="header-logo" />
           <span className="header-brand">Neplance</span>
         </div>
@@ -84,13 +91,27 @@ export const Header = ({ user, onLogout, onRoleSwitch }) => {
 
           {showDropdown && (
             <div className="profile-dropdown">
-              <button
-                type="button"
-                className="dropdown-item"
-                onClick={handleProfileClick}
-              >
-                My Profile
-              </button>
+              {pathname === "/profile" ? (
+                <button
+                  type="button"
+                  className="dropdown-item"
+                  onClick={() => {
+                    // Navigate to Dashboard
+                    router.push("/dashboard");
+                    setShowDropdown(false);
+                  }}
+                >
+                  Dashboard
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="dropdown-item"
+                  onClick={handleProfileClick}
+                >
+                  My Profile
+                </button>
+              )}
               {hasBothRoles && (
                 <button
                   type="button"

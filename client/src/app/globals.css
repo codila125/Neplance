@@ -9,6 +9,7 @@
 @import "../styles/layout.css";
 @import "../styles/utilities.css";
 @import "../styles/dashboard.css";
+@import "../styles/profile.css";
 
 /* Brand Title - unique to this file */
 .brand-title {
