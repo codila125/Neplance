@@ -7,7 +7,7 @@ import { useFreelancerDashboard } from "../../../lib/useFreelancerDashboard";
 import { EmptyState } from "../../dashboard/EmptyState";
 import { Header, MobileMenu } from "../../dashboard/Header";
 import { JobCard, ProposalCard } from "../../dashboard/JobCard";
-import { ProposalModal } from "../../dashboard/ProposalModal";
+import { JobModal } from "../../dashboard/JobModal";
 import {
   AvailableIcon,
   OngoingIcon,
@@ -17,8 +17,12 @@ import {
 
 export const FreelancerDashboard = ({ user, onLogout, onRoleSwitch }) => {
   const [activeTab, setActiveTab] = useState("available");
+
+  // selectedJob is now used for both "proposal" and "view" modes
   const [selectedJob, setSelectedJob] = useState(null);
+  const [modalMode, setModalMode] = useState("view"); // 'view' | 'proposal'
   const [submitting, setSubmitting] = useState(false);
+
   const token = getAuthToken();
   const {
     availableJobs,
@@ -53,10 +57,16 @@ export const FreelancerDashboard = ({ user, onLogout, onRoleSwitch }) => {
   }
 
   const handleOpenProposalModal = (job) => {
+    setModalMode("proposal");
     setSelectedJob(job);
   };
 
-  const handleCloseProposalModal = () => {
+  const handleViewJobDetails = (job) => {
+    setModalMode("view");
+    setSelectedJob(job);
+  };
+
+  const handleCloseModal = () => {
     setSelectedJob(null);
   };
 
@@ -94,6 +104,7 @@ export const FreelancerDashboard = ({ user, onLogout, onRoleSwitch }) => {
           variant={variant}
           onSubmitProposal={handleOpenProposalModal}
           onMarkComplete={handleMarkComplete}
+          onViewDetails={handleViewJobDetails}
         />
       ))
     ) : (
@@ -103,7 +114,11 @@ export const FreelancerDashboard = ({ user, onLogout, onRoleSwitch }) => {
   const renderProposalCards = (proposals) =>
     proposals.length > 0 ? (
       proposals.map((proposal) => (
-        <ProposalCard key={proposal._id} proposal={proposal} />
+        <ProposalCard
+          key={proposal._id}
+          proposal={proposal}
+          onViewDetails={handleViewJobDetails}
+        />
       ))
     ) : (
       <EmptyState {...getEmptyState()} />
@@ -188,12 +203,13 @@ export const FreelancerDashboard = ({ user, onLogout, onRoleSwitch }) => {
         {activeTab === "ongoing" && renderJobCards(ongoingJobs, "current")}
       </div>
 
-      {/* Proposal Modal */}
+      {/* Replaced ProposalModal with JobModal */}
       {selectedJob && (
-        <ProposalModal
+        <JobModal
           job={selectedJob}
+          mode={modalMode}
           onSubmit={handleSubmitProposal}
-          onClose={handleCloseProposalModal}
+          onClose={handleCloseModal}
           loading={submitting}
         />
       )}

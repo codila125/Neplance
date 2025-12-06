@@ -3,6 +3,7 @@ export const JobCard = ({
   variant = "default",
   onSubmitProposal,
   onMarkComplete,
+  onViewDetails,
 }) => {
   const { title, description, budget, status, client } = job;
   const clientName = client?.name || "Unknown Client";
@@ -39,30 +40,42 @@ export const JobCard = ({
             NPR {budget?.toLocaleString() || "N/A"}
           </span>
         </div>
-        {variant === "find" && (
-          <button
-            type="button"
-            className="job-card-btn job-card-btn-primary"
-            onClick={() => onSubmitProposal?.(job)}
-          >
-            Submit Proposal
-          </button>
-        )}
-        {variant === "current" && status === "in-progress" && (
+
+        <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             type="button"
             className="job-card-btn job-card-btn-secondary"
-            onClick={() => onMarkComplete?.(job)}
+            onClick={() => onViewDetails?.(job)}
           >
-            Mark Complete
+            View Details
           </button>
-        )}
+
+          {variant === "find" && (
+            <button
+              type="button"
+              className="job-card-btn job-card-btn-primary"
+              onClick={() => onSubmitProposal?.(job)}
+            >
+              Submit Proposal
+            </button>
+          )}
+
+          {variant === "current" && status === "in-progress" && (
+            <button
+              type="button"
+              className="job-card-btn job-card-btn-secondary"
+              onClick={() => onMarkComplete?.(job)}
+            >
+              Mark Complete
+            </button>
+          )}
+        </div>
       </div>
     </article>
   );
 };
 
-export const ProposalCard = ({ proposal }) => {
+export const ProposalCard = ({ proposal, onViewDetails }) => {
   const { job, amount, status } = proposal;
   const jobTitle = job?.title || "Unknown Job";
   const clientName = job?.client?.name || "Unknown Client";
@@ -105,11 +118,14 @@ export const ProposalCard = ({ proposal }) => {
             NPR {job?.budget?.toLocaleString() || "N/A"}
           </span>
         </div>
-        {status === "pending" && (
-          <button type="button" className="job-card-btn job-card-btn-secondary">
-            View Details
-          </button>
-        )}
+        {/* Always show View Details for consistency, or keep logic */}
+        <button
+          type="button"
+          className="job-card-btn job-card-btn-secondary"
+          onClick={() => onViewDetails?.(job)}
+        >
+          View Details
+        </button>
         {status === "accepted" && (
           <span className="job-card-status-label status-accepted-label">
             Accepted

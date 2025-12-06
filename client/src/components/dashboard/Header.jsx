@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
 import { setAuthCookies } from "../../lib/auth-cookies";
 import { EverestLogo } from "../EverestLogo";
 
@@ -69,13 +70,10 @@ export const Header = ({ user, onLogout, onRoleSwitch }) => {
   return (
     <header className="header sticky top-0 z-10">
       <div className="header-content">
-        <div
-          className="header-brand-group cursor-pointer"
-          onClick={() => router.push("/dashboard")}
-        >
+        <Link href="/dashboard" className="header-brand-group cursor-pointer">
           <EverestLogo className="header-logo" />
           <span className="header-brand">Neplance</span>
-        </div>
+        </Link>
 
         <div className="profile-menu" ref={dropdownRef}>
           <button
