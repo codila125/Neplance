@@ -2,7 +2,7 @@
  * Custom hook for freelancer dashboard data fetching
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { apiCall } from "./api";
 
 const EMPTY_STATES = {
@@ -26,66 +26,70 @@ export function useFreelancerDashboard(token) {
   const [ongoingJobs, setOngoingJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const fetchFunctionRef = useRef(null);
 
-  const refetch = useCallback(() => {
-    setRefreshKey((prev) => prev + 1);
-  }, []);
-
-  useEffect(() => {
+  const fetchDashboardData = useCallback(async () => {
     if (!token) {
       setError("Authentication token required");
       setLoading(false);
       return;
     }
 
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-        // Fetch available jobs
-        const jobsData = await apiCall("/jobs", token);
-        if (jobsData.status === "success") {
-          setAvailableJobs(
-            jobsData.data.filter((job) => job.status === "open"),
-          );
-        }
-
-        // Fetch my proposals
-        const proposalsData = await apiCall("/proposals/myProposals", token);
-        if (proposalsData.status === "success") {
-          const proposals = proposalsData.data;
-
-          // Filter pending proposals
-          setProposedJobs(proposals.filter((p) => p.status === "pending"));
-
-          // Filter and map accepted proposals (ongoing jobs) - exclude completed jobs
-          const ongoing = proposals
-            .filter(
-              (p) =>
-                p.status === "accepted" &&
-                p.job &&
-                p.job.status === "in-progress",
-            )
-            .map((p) => ({
-              ...p.job,
-              client: p.job.client,
-              status: p.job.status,
-            }));
-
-          setOngoingJobs(ongoing);
-        }
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        setError(err.message || "Failed to load dashboard data");
-      } finally {
-        setLoading(false);
+      // Fetch available jobs
+      const jobsData = await apiCall("/jobs", token);
+      if (jobsData.status === "success") {
+        setAvailableJobs(jobsData.data.filter((job) => job.status === "open"));
       }
-    };
 
+      // Fetch my proposals
+      const proposalsData = await apiCall("/proposals/myProposals", token);
+      if (proposalsData.status === "success") {
+        const proposals = proposalsData.data;
+
+        // Filter pending proposals
+        setProposedJobs(proposals.filter((p) => p.status === "pending"));
+
+        // Filter and map accepted proposals (ongoing jobs) - exclude completed jobs
+        const ongoing = proposals
+          .filter(
+            (p) =>
+              p.status === "accepted" &&
+              p.job &&
+              p.job.status === "in-progress",
+          )
+          .map((p) => ({
+            ...p.job,
+            client: p.job.client,
+            status: p.job.status,
+          }));
+
+        setOngoingJobs(ongoing);
+      }
+    } catch (err) {
+      console.error("Error fetching dashboard data:", err);
+      setError(err.message || "Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  // Store the fetch function in a ref so refetch can call it
+  useEffect(() => {
+    fetchFunctionRef.current = fetchDashboardData;
+  }, [fetchDashboardData]);
+
+  // Initial fetch
+  useEffect(() => {
     fetchDashboardData();
-  }, [token, refreshKey]);
+  }, [fetchDashboardData]);
+
+  const refetch = useCallback(() => {
+    fetchFunctionRef.current?.();
+  }, []);
 
   return {
     availableJobs,

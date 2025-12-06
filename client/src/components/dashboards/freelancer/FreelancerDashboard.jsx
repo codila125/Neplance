@@ -15,7 +15,7 @@ import {
   TabNav,
 } from "../../dashboard/TabNav";
 
-export const FreelancerDashboard = ({ user, onLogout }) => {
+export const FreelancerDashboard = ({ user, onLogout, onRoleSwitch }) => {
   const [activeTab, setActiveTab] = useState("available");
   const [selectedJob, setSelectedJob] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -33,7 +33,7 @@ export const FreelancerDashboard = ({ user, onLogout }) => {
   if (loading) {
     return (
       <div className="dashboard">
-        <Header user={user} onLogout={onLogout} />
+        <Header user={user} onLogout={onLogout} onRoleSwitch={onRoleSwitch} />
         <div className="flex items-center justify-center h-[calc(100vh-65px)]">
           <div className="text-xl font-bold text-primary">Loading...</div>
         </div>
@@ -44,7 +44,7 @@ export const FreelancerDashboard = ({ user, onLogout }) => {
   if (error) {
     return (
       <div className="dashboard">
-        <Header user={user} onLogout={onLogout} />
+        <Header user={user} onLogout={onLogout} onRoleSwitch={onRoleSwitch} />
         <div className="flex items-center justify-center h-[calc(100vh-65px)]">
           <div className="text-red-500 font-bold">{error}</div>
         </div>
@@ -124,7 +124,7 @@ export const FreelancerDashboard = ({ user, onLogout }) => {
 
   return (
     <div className="dashboard">
-      <Header user={user} onLogout={onLogout} />
+      <Header user={user} onLogout={onLogout} onRoleSwitch={onRoleSwitch} />
 
       {/* Mobile Menu - Only visible on mobile */}
       <div className="mobile-menu-container">

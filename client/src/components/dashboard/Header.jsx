@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { setAuthCookies } from "../../lib/auth-cookies";
 import { EverestLogo } from "../EverestLogo";
 
-export const Header = ({ user, onLogout }) => {
+export const Header = ({ user, onLogout, onRoleSwitch }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -28,9 +29,32 @@ export const Header = ({ user, onLogout }) => {
   };
 
   const handleSwitchRole = () => {
-    // TODO: Switch role logic
     setShowDropdown(false);
-    console.log("Switching role...");
+
+    // Determine the new role
+    const currentRole = user?.role?.[0] || "freelancer";
+    const newRole = currentRole === "freelancer" ? "client" : "freelancer";
+
+    // Update user with new role (first in array)
+    const updatedUser = {
+      ...user,
+      role: [newRole, ...user.role.filter((r) => r !== newRole)],
+    };
+
+    // Update cookies with the new user data
+    const token =
+      localStorage.getItem("auth_token") ||
+      document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("auth_token="))
+        ?.split("=")[1];
+
+    if (token) {
+      setAuthCookies(token, updatedUser);
+    }
+
+    // Trigger parent component to re-render with new role
+    onRoleSwitch?.(updatedUser);
   };
 
   const handleLogout = () => {

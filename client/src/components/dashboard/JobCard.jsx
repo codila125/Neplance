@@ -1,4 +1,9 @@
-export const JobCard = ({ job, variant = "default", onSubmitProposal, onMarkComplete }) => {
+export const JobCard = ({
+  job,
+  variant = "default",
+  onSubmitProposal,
+  onMarkComplete,
+}) => {
   const { title, description, budget, status, client } = job;
   const clientName = client?.name || "Unknown Client";
 

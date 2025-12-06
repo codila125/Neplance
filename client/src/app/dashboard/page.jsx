@@ -43,12 +43,26 @@ export default function DashboardPage() {
     router.push("/");
   };
 
+  const handleRoleSwitch = (updatedUser) => {
+    // Update the user state with the new role
+    setUser(updatedUser);
+  };
+
   // Check user role and render appropriate dashboard
-  const isFreelancer = user.role?.includes("freelancer");
+  // Use the first role in the array as the current role
+  const isFreelancer = user.role?.[0] === "freelancer";
 
   return isFreelancer ? (
-    <FreelancerDashboard user={user} onLogout={handleLogout} />
+    <FreelancerDashboard
+      user={user}
+      onLogout={handleLogout}
+      onRoleSwitch={handleRoleSwitch}
+    />
   ) : (
-    <ClientDashboard user={user} onLogout={handleLogout} />
+    <ClientDashboard
+      user={user}
+      onLogout={handleLogout}
+      onRoleSwitch={handleRoleSwitch}
+    />
   );
 }
